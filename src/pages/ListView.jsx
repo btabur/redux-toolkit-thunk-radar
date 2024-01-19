@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import "bootstrap/dist/css/bootstrap.min.css"
 import { useSelector } from 'react-redux'
 import ReactPaginate from 'react-paginate'
@@ -7,7 +7,7 @@ import ReactPaginate from 'react-paginate'
 const ListView = ({openModal}) => {
   const state = useSelector((store)=>store)
 
-  const [itemOffset, setItemOffset] = useState(0);
+  const [itemOffset, setItemOffset] = useState(10);
 
  //sayfa başına eleman sayısı
 const itemsPerPage = 10;
@@ -20,10 +20,9 @@ const itemsPerPage = 10;
 
   // Invoke when user click to request another page.
   const handlePageClick = (event) => {
-    const newOffset = (event.selected * itemsPerPage) % items.length;
-    console.log(
-      `User requested page number ${event.selected}, which is offset ${newOffset}`
-    );
+    //gösterilecek yeni elemanları hesaplar
+    const newOffset = (event.selected * itemsPerPage) % state?.flights.length;
+    
     setItemOffset(newOffset);
   };
   return (
@@ -39,7 +38,7 @@ const itemsPerPage = 10;
             </tr>
         </thead>
         <tbody>
-          {state.flights.map((fly)=>(
+          {currentItems.map((fly)=>(
             <tr>
               <td>{fly.id}</td>
               <td>{fly.code}</td>
@@ -54,7 +53,7 @@ const itemsPerPage = 10;
         </tbody>
       </table>
 
-      <ReactPaginate className='pagination' pageCount={30} onPageChange={handleClick} nextLabel='ileri >' previousLabel='< geri '/>
+      <ReactPaginate className='pagination' activeClassName='active' pageCount={pageCount} onPageChange={handlePageClick} nextLabel='ileri >' previousLabel='< geri '/>
       
     </div>
   )
